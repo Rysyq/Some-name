@@ -30,10 +30,10 @@
 # -
 # -
 # Work in progress:
-# -Hp postaci -Rysyq
+# -
 # -
 # -
 # Done:
-# -
+# -Hp postaci -Rysyq
 # -
 # -
