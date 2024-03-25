@@ -27,10 +27,10 @@
 # Jeśli się podjęto zrobienia czegoś to warto dać znać, przenosząc to do WIPu, aby uniknąć sytuacji, gdzie oboje robimy to samo.
 # To do:
 # -Poruszanie się postaci przez input -free
-# -Hp postaci -free
+# -
 # -
 # Work in progress:
-# -
+# -Hp postaci -Rysyq
 # -
 # -
 # Done:
