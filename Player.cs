@@ -19,4 +19,28 @@ class Player
     int basicdmg = 5;
     int MaxDmg {get; set; } = 120;
     //trzeba będzie trochę przebudować dmg, jak już będą itemy od dmg - na chwilę obecną jest tak
+
+    public int X {get; set;}
+    public int Y {get; set;}
+
+    public void Move()
+    {
+        ConsoleKeyInfo pressedKey = Console.ReadKey(true);
+        if (pressedKey.Key == ConsoleKey.A)
+        {
+            X -= 1;
+        }
+        else if (pressedKey.Key == ConsoleKey.D)
+        {
+            X += 1;
+        }
+        else if (pressedKey.Key == ConsoleKey.W)
+        {
+            Y -= 1;
+        }
+        else if (pressedKey.Key == ConsoleKey.S)
+        {
+            Y += 1;
+        }
+    }
 }
