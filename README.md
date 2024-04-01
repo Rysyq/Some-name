@@ -30,7 +30,7 @@
 # -
 # -
 # Work in progress:
-# -Poruszanie się postaci przez input -Rysyq
+# -
 # -
 # -
 # Done:
