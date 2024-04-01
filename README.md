@@ -30,7 +30,7 @@
 # -
 # -
 # Work in progress:
-# -
+# -Dmg postaci -Rysyq
 # -
 # -
 # Done:
