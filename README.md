@@ -15,7 +15,7 @@
 
 # Zawieszone w powietrzu (czyli do zrobiebia, ale można sie wstrzymać +pomyśleć i baczeć na wymagania):
 # -Odgórnie ograniczony inwentarz (ilość miejsc w ekwipunku)
-# -Dmg postaci - docelowo niewysoki, aby skłoić do używania itemów podnoszących dmg
+# -Dmg postaci - przyjrzeć się temu jeszcze raz po ogarnięciu itemów od dmg
 # -Plansza/Lokacja nr. 1
 # -Itemy podnoszące dmg
 # -Flaszki hp
@@ -30,10 +30,13 @@
 # -
 # -
 # Work in progress:
-# -Dmg postaci -Rysyq
+# -
 # -
 # -
 # Done:
 # -Hp postaci -Rysyq
+# -Dmg postaci -Rysyq
+# -
+# -
 # -
 # -
