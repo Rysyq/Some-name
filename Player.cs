@@ -20,6 +20,8 @@ class Player
     int MaxDmg { get; set; } = 120;
     //trzeba będzie trochę przebudować dmg, jak już będą itemy od dmg - na chwilę obecną jest tak
 
+    public Coordinates LastCoords { get; set; }
+    public Coordinates PreviousCoords { get; set; }
     public int X { get; set; }
     public int Y { get; set; }
 
