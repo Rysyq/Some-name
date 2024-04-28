@@ -26,9 +26,9 @@
 
 # Jeśli się podjęto zrobienia czegoś to warto dać znać, przenosząc to do WIPu, aby uniknąć sytuacji, gdzie oboje robimy to samo.
 # To do:
-# -
-# -
-# -
+# -Movement na dictonary + podmienić tam te coordy w nim, żeby nie szło na starych
+# -Kolizja ze ścianami
+# -Zacząc powoli kombinować z atakiem
 # Work in progress:
 # -
 # -
