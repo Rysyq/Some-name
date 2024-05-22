@@ -4,82 +4,54 @@ using System.Security;
 
 Player player = new Player();
 
-string[] level = {
-"╔═════════════╦════════════════════════════════════════════════╦══════════════════════════════════════════════════════╗",
-"║             ║                                                ║                                                      ║",
-"║             ║                                                ║                                                      ║",
-"║             ║                                                ║                                                      ║",
-"║             ║                                                ║                                                      ║",
-"║                                                              ║                                                      ║",
-"║                                                              ║                                                      ║",
-"║                                                              ║                                                      ║",
-"║                                                              ║                                                      ║",
-"║                                                              ║                                                      ║",
-"║                                                              ║                                                      ║",
-"║                                                              ║                                                      ║",
-"║                                                              ║                                                      ║",
-"║                                                              ║                                                      ║",
-"║                                                                                                                     ║",
-"║                                                                                                                     ║",
-"║                                                              ║                                                      ║",
-"║                                                              ║                                                      ║",
-"║                                                              ║                                                      ║",
-"║                                                              ║                                                      ║",
-"╚══════════════════════════════════════════════════════════════╩══════════════════════════════════════════════════════╝",
-};
+Level level = new Level();
 
-foreach (string wall in level)
-{
-    Console.WriteLine(wall);
-}
+Console.Clear();
 
-player.X = 4;
-player.Y = 2;
+level.Display();
 
-int x = 4;
-int y = 2;
-int oldX;
-int oldY;
-string obstacle = "═║╩";
-string logicChars = "A";
-ConsoleKey PlayerInput;
+Console.SetCursorPosition(player.LastCoords.X, player.LastCoords.Y);
+Console.Write("@");
 
 Console.CursorVisible = false;
 while (true)
 {
-    oldY = y;
-    oldX = x;
+    Coordinates nextCoords = player.GetNextCoords();
 
-    PlayerInput = Console.ReadKey(true).Key;
-    player.Move();
-    Console.SetCursorPosition(player.X, player.Y);
-    Console.WriteLine("S");
-    UpdatePos();
+    player.Move(nextCoords);
+
+    
+    char previousCell = level.GetCellAt(player.PreviousCoords);
+    Console.SetCursorPosition(player.PreviousCoords.X, player.PreviousCoords.Y);
+    Console.Write(previousCell);
 }
 
-void UpdatePos()
-{
-    player.Move();
 
-    if (logicChars.Contains(level[x][y]))
-    {
-        Console.Clear();
-        Console.WriteLine("You Won !!!");
-    }
-    else if (!(obstacle.Contains(level[x][y])))
-    {
-        Console.SetCursorPosition(oldY, oldX);
-        Console.Write(" ");
+// void UpdatePos()
+// {
+//     player.Move();
 
-        Console.SetCursorPosition(y, x);
-        Console.Write("S");
-    }
-    else 
-    {
-        x = oldX;
-        y = oldY;
-    }
-}
+    
+
+//     // if (logicChars.Contains(level[x][y]))
+//     // {
+//     //     Console.Clear();
+//     //     Console.WriteLine("You Won !!!");
+//     // }
+//     // else if (!(obstacle.Contains(level[x][y])))
+//     // {
+//     //     Console.SetCursorPosition(oldY, oldX);
+//     //     Console.Write(" ");
+
+//     //     Console.SetCursorPosition(y, x);
+//     //     Console.Write("S");
+//     // }
+//     // else 
+//     // {
+//     //     x = oldX;
+//     //     y = oldY;
+//     // }
+// }
 
 //aby zrobić to poniżej - coordy, coordy do movementu - przerobienie poruszania 
 //poruszanie done > pozycja, a mapa, żeby nie zżerało - map tu może być, I quess 
