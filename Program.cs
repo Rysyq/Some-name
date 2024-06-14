@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Security;
 
-Player player = new Player();
+Player player = new Player(3, 4);
 
 Level level = new Level();
 
@@ -20,7 +20,7 @@ while (true)
 
     player.Move(nextCoords);
 
-    
+
     char previousCell = level.GetCellAt(player.PreviousCoords);
     Console.SetCursorPosition(player.PreviousCoords.X, player.PreviousCoords.Y);
     Console.Write(previousCell);
@@ -31,7 +31,7 @@ while (true)
 // {
 //     player.Move();
 
-    
+
 
 //     // if (logicChars.Contains(level[x][y]))
 //     // {
@@ -89,8 +89,8 @@ while (true)
 
 //     playerInput = Console.ReadKey(true).Key;
 //     UpdatePos(playerInput);
-    
-    
+
+
 
 // }
 
@@ -113,7 +113,7 @@ while (true)
 //     {
 //         Console.SetCursorPosition(oldCol, oldRow);
 //         Console.Write(" ");
-        
+
 //         Console.SetCursorPosition(col, row);
 //         Console.Write("#");
 //     }

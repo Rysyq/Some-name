@@ -32,6 +32,10 @@ class Player
     {
         LastCoords = new Coordinates(x, y);
         PreviousCoords = new Coordinates(x, y);
+        directions[ConsoleKey.D] = new Coordinates(1, 0);
+        directions[ConsoleKey.W] = new Coordinates(0, -1);
+        directions[ConsoleKey.S] = new Coordinates(0, 1);
+        directions[ConsoleKey.E] = new Coordinates(1, -1);
     }
 
     public Player(Coordinates startingCoords)
@@ -43,7 +47,6 @@ class Player
         directions[ConsoleKey.S] = new Coordinates(0, 1);
         directions[ConsoleKey.E] = new Coordinates(1, -1);
     }
-
     public Coordinates GetNextCoords()
     {
         Coordinates nextCoords = new Coordinates(LastCoords);
