@@ -14,11 +14,19 @@ public class Level
     };
 
     //stąd: https://pl.piliapp.com/symbol/square/
-    
+    private Dictionary<CellTypes, ConsoleColor> colorLevel = new Dictionary<CellTypes, ConsoleColor> {
+        { CellTypes.WallCorner, ConsoleColor.Yellow},
+        { CellTypes.WallHorizontal, ConsoleColor.Yellow},
+        { CellTypes.WallVertical, ConsoleColor.Yellow},
+        { CellTypes.Grass, ConsoleColor.Green},
+        { CellTypes.Empty, ConsoleColor.Black},
+        { CellTypes.Cross, ConsoleColor.White},
+    };
 
     private CellTypes[] walkableCellTypes = new CellTypes[] { 
         CellTypes.Grass, 
         CellTypes.Cross,
+        CellTypes.Empty,
     };
 
     public Level()
@@ -126,12 +134,12 @@ public class Level
         Console.Write(visual);
     }
 
+   
 
     internal void RedrawCellAt(Coords position)
     {
         var cellValue = GetCellAt(position);
         var cellVisual = GetCellVisualAt(position);
         DrawSomethingAt(cellVisual, position);
-        Console.ResetColor();
     }
 }
