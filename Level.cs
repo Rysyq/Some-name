@@ -98,6 +98,8 @@ public class Level
             {
                 var cellValue = GetCellAt(x, y);
                 var cellVisual = cellVisuals[cellValue];
+                var cellColor = GetCellColorByValue(cellValue);
+                Console.ForegroundColor = cellColor;
                 Console.Write(cellVisual);
                 Console.ResetColor();
             }
@@ -134,12 +136,18 @@ public class Level
         Console.Write(visual);
     }
 
-   
+    private ConsoleColor GetCellColorByValue(CellTypes value)
+    {
+        return colorLevel.GetValueOrDefault(value, ConsoleColor.Black);
+    }
 
     internal void RedrawCellAt(Coords position)
     {
         var cellValue = GetCellAt(position);
         var cellVisual = GetCellVisualAt(position);
+        var cellColor = GetCellColorByValue(cellValue);
+        Console.ForegroundColor = cellColor;
         DrawSomethingAt(cellVisual, position);
+        Console.ResetColor();
     }
 }
