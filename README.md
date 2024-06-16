@@ -23,22 +23,3 @@
 # -Looting system
 # +Pilnowanie balansu
 # Jeśli coś z powyższych jest potrzebne z jakiegokolwiek powodu to przenieść to do "to do".
-
-# Jeśli się podjęto zrobienia czegoś to warto dać znać, przenosząc to do WIPu, aby uniknąć sytuacji, gdzie oboje robimy to samo.
-# To do:
-# -Movement na dictonary + podmienić tam te coordy w nim, żeby nie szło na starych
-# -Kolizja ze ścianami
-# -Zacząc powoli kombinować z atakiem
-# Work in progress:
-# -
-# -
-# -
-# Done:
-# -Hp postaci -Rysyq
-# -Dmg postaci -Rysyq
-# -Poruszanie się postaci przez input -Rysyq
-# -
-# -
-# -
-# -
-# -
