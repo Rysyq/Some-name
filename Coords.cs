@@ -1,14 +1,14 @@
-public class Coordinates
+public class Coords
 {
-public int X { get; set; }
-public int Y { get; set; }
-    public Coordinates(int x, int y)
+    public int X { get; set; }
+    public int Y { get; set; }
+
+    public Coords(int x, int y)
     {
         X = x;
         Y = y;
     }
-
-    public Coordinates(Coordinates other)
+    public Coords(Coords other)
     {
         X = other.X;
         Y = other.Y;
