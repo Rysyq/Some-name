@@ -14,4 +14,17 @@ internal class KeyboardInputComp : IInputComp
             [ConsoleKey.S] = new Coords(0, 1),
         };   
     }
+    public Coords GetDirection()
+    {
+        Coords nextPosition = new Coords(0, 0);
+        
+        ConsoleKeyInfo pressedKey = Console.ReadKey(true);
+        if (directions.ContainsKey(pressedKey.Key))
+        {
+            nextPosition.X = directions[pressedKey.Key].X;
+            nextPosition.Y = directions[pressedKey.Key].Y;
+        }
+
+        return nextPosition;
+    }
 }
