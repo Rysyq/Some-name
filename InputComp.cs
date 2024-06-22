@@ -1,0 +1,4 @@
+interface IInputComp
+{
+    Coords GetDirection();
+}
