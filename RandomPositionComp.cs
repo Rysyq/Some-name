@@ -1,4 +1,4 @@
-class RandomPositionComp
+public class RandomPositionComp
 {
     Random rps;
     private int maxX;

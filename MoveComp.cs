@@ -12,7 +12,7 @@ internal class MoveComp
         this.positionComp = positionComp;
         this.inputComp = inputComp;
         this.randomPositionComp = randomPositionComp;
-        PreviousPosition = new Coords(positionComp.Position); // Ensure this is correctly initialized
+        PreviousPosition = new Coords(positionComp.Position);
     }
 
     public void MoveRandomly()
