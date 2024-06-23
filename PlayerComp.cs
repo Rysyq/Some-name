@@ -1,22 +1,19 @@
 class ComposedPlayer
 {
+    public VisualComp VisualComp { get; }
     public HealthComp Health { get; }
     public PositionComp PositionComp { get; }
+    public MoveComp Movement { get; }
     public IInputComp InputComp { get; }
-    public VisualComp VisualComp { get; }
-    public MoveComp Move { get; }
+    public DamageComp DamageComp { get; }
 
-    public DamageComp Damaging { get; }
-
-    public ComposedPlayer(string visual, Coords startingPosition, int maxX, int maxY)
+    public ComposedPlayer(string visual, Coords startingPosition)
     {
+        VisualComp = new VisualComp(visual);
         Health = new HealthComp();
         PositionComp = new PositionComp(startingPosition);
         InputComp = new KeyboardInputComp();
-        VisualComp = new VisualComp(visual);
-        var randomPositionComp = new RandomPositionComp(maxX, maxY);
-        Move = new MoveComp(PositionComp, InputComp, randomPositionComp);
-        Damaging = new DamageComp(PositionComp);
+        Movement = new MoveComp(PositionComp, InputComp);
+        DamageComp = new DamageComp(PositionComp);
     }
 }
-

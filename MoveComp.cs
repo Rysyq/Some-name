@@ -3,22 +3,13 @@ internal class MoveComp
     private readonly PositionComp positionComp;
     private readonly IInputComp inputComp;
 
-    public Coords PreviousPosition { get; set; }
+    public Coords PreviousPosition { get; set;}
 
-    private readonly RandomPositionComp randomPositionComp;
-
-    public MoveComp(PositionComp positionComp, IInputComp inputComp, RandomPositionComp randomPositionComp)
+    public MoveComp(PositionComp positionComp, IInputComp inputComp)
     {
+        PreviousPosition = new Coords(positionComp.Position);
         this.positionComp = positionComp;
         this.inputComp = inputComp;
-        this.randomPositionComp = randomPositionComp;
-        PreviousPosition = new Coords(positionComp.Position);
-    }
-
-    public void MoveRandomly()
-    {
-        Coords newPos = randomPositionComp.GenerateRandomPosition();
-        positionComp.Position = newPos;
     }
 
     public void Move(Coords targetPosition)
