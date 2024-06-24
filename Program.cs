@@ -68,6 +68,11 @@ namespace GameNamespace
                                 HandleHealing(level2, nextPlayerPosition, composedPlayer);
                                 HandleEnemyMovement(level2, composedEnemy, composedEnemy1);
                                 HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1);
+                                if (composedPlayer.PositionComp.Position.X == 1 && composedPlayer.PositionComp.Position.Y == 1)
+                                {
+                                    return;
+                                }
+
 
                             }
                         }
@@ -103,6 +108,9 @@ namespace GameNamespace
                 level.RemoveHealingItemAt(composedPlayer.PositionComp.Position);
                 level.RedrawCellAt(composedPlayer.PositionComp.Position);
 
+                Console.SetCursorPosition(2, 1);
+                Console.SetCursorPosition(2, 1);
+                Console.WriteLine(new string(' ', Console.WindowWidth));
                 Console.SetCursorPosition(2, 1);
                 Console.WriteLine($"Player healed! Current health: {composedPlayer.Health.Hp}");
                 Console.ReadKey();
@@ -153,38 +161,61 @@ namespace GameNamespace
         {
             if (composedEnemy.Health.Hp > 0 && composedEnemy1.Health.Hp > 0)
             {
+                if (composedPlayer.Health.Hp <= 0)
+                {
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine("The player is dead.");
+                    isPlayerAlive = false;
+                    Console.SetCursorPosition(2, 1);
+                    Console.ReadKey();
+                }
                 if (composedEnemy.DamageComp.CanEnemyHitInThisRange(composedPlayer.PositionComp.Position)
                     || composedEnemy1.DamageComp.CanEnemyHitInThisRange(composedPlayer.PositionComp.Position))
                 {
-                    Console.SetCursorPosition(2, 0);
+                    Console.SetCursorPosition(2, 1);
                     composedEnemy.DamageComp.Attack(composedPlayer.Health);
                     composedEnemy1.DamageComp.Attack(composedPlayer.Health);
-                    Console.SetCursorPosition(2, 0);
-                    Console.WriteLine($"Player: {composedPlayer.Health}, Enemy: {composedEnemy.Health}, {composedEnemy1.Health}");
-                    Console.SetCursorPosition(2, 0);
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}     ");
                 }
-            }
 
-            if (composedPlayer.DamageComp.CanHitInThisRange(composedEnemy.PositionComp.Position)
-                || composedPlayer.DamageComp.CanHitInThisRange(composedEnemy1.PositionComp.Position))
-            {
-                Console.SetCursorPosition(2, 0);
-                Console.WriteLine("Enemy nearby!");
-                Console.ReadKey(true);
-                composedPlayer.DamageComp.Attack(composedEnemy.Health);
-                composedPlayer.DamageComp.Attack(composedEnemy1.Health);
-                Console.SetCursorPosition(2, 0);
-                Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, and Enemy 2: {composedEnemy1.Health.Hp}");
-                Console.SetCursorPosition(2, 0);
-            }
+                if (composedPlayer.DamageComp.CanHitInThisRange(composedEnemy.PositionComp.Position)
+                    && composedPlayer.DamageComp.CanHitInThisRange(composedEnemy1.PositionComp.Position))
+                {
+                    Console.SetCursorPosition(2, 1);
+                    Console.ReadKey(true);
+                    composedPlayer.DamageComp.Attack(composedEnemy.Health);
+                    composedPlayer.DamageComp.Attack(composedEnemy1.Health);
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}     ");
+                }
+                else if (composedPlayer.DamageComp.CanHitInThisRange(composedEnemy.PositionComp.Position))
+                {
+                    Console.SetCursorPosition(2, 1);
+                    Console.ReadKey(true);
+                    composedPlayer.DamageComp.Attack(composedEnemy.Health);
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}     ");
+                }
+                else if (composedPlayer.DamageComp.CanHitInThisRange(composedEnemy1.PositionComp.Position))
+                {
+                    Console.SetCursorPosition(2, 1);
+                    Console.ReadKey(true);
+                    composedPlayer.DamageComp.Attack(composedEnemy1.Health);
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}     ");
+                }
 
-            if (composedPlayer.Health.Hp <= 0)
-            {
-                Console.SetCursorPosition(2, 0);
-                Console.WriteLine("The player is dead.");
-                isPlayerAlive = false;
-                Console.SetCursorPosition(2, 0);
-                Console.ReadKey();
             }
         }
     }
