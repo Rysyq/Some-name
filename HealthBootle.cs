@@ -1,1 +1,0 @@
-//there will be random generater 3 bootle on map to pick up
