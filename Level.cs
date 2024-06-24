@@ -1,9 +1,13 @@
 public class Level
 {
-    public Coords Origin { get; set;}
+    public Coords Origin { get; set; }
     public Coords Size { get; }
 
     private int[][] levelData;
+
+    /// 
+
+    /// 
     private Dictionary<CellTypes, char> cellVisuals = new Dictionary<CellTypes, char>{
         { CellTypes.WallCorner, '■'},
         { CellTypes.WallHorizontal, '═'},
@@ -11,7 +15,10 @@ public class Level
         { CellTypes.Grass, '.'},
         { CellTypes.Empty, ' '},
         { CellTypes.Cross, '†'},
+        {CellTypes.HealingItem, '+'},
     };
+
+    public List<Coords> HealingItemPositions { get; private set; } = new List<Coords>();
 
     //stąd: https://pl.piliapp.com/symbol/square/
     private Dictionary<CellTypes, ConsoleColor> colorLevel = new Dictionary<CellTypes, ConsoleColor> {
@@ -23,11 +30,14 @@ public class Level
         { CellTypes.Cross, ConsoleColor.White},
     };
 
-    private CellTypes[] walkableCellTypes = new CellTypes[] { 
-        CellTypes.Grass, 
+    private CellTypes[] walkableCellTypes = new CellTypes[] {
+        CellTypes.Grass,
         CellTypes.Cross,
         CellTypes.Empty,
+        CellTypes.HealingItem
     };
+
+
 
     public Level()
     {
@@ -70,6 +80,61 @@ public class Level
 
         Size = new Coords(x, y);
         Origin = new Coords(0, 0);
+
+        
+
+        InitializeHealingItems();
+
+    }
+
+
+    private List<HealingItem> healingItems = new List<HealingItem>();
+
+     public void GenerateRandomHealingItems(int numberOfItems, int healingAmount)
+{
+    Random random = new Random();
+
+    for (int i = 0; i < numberOfItems; i++)
+    {
+        Coords randomPosition;
+        do
+        {
+            int x = random.Next(0, Size.X);
+            int y = random.Next(0, Size.Y);
+            randomPosition = new Coords(x, y);
+        } while (!IsCoordsCorrect(randomPosition) || healingItems.Any(item => item.Position.Equals(randomPosition)));
+
+        HealingItem newItem = new HealingItem(randomPosition, healingAmount);
+        healingItems.Add(newItem);
+        levelData[randomPosition.Y][randomPosition.X] = (int)CellTypes.HealingItem;
+    }
+}
+
+    public void InitializeHealingItems()
+    {
+        for (int y = 0; y < levelData.Length; y++)
+        {
+            for (int x = 0; x < levelData[y].Length; x++)
+            {
+                if (levelData[y][x] == 8) 
+                {
+                    HealingItemPositions.Add(new Coords(x, y));
+                }
+            }
+        }
+    }
+
+    public bool RemoveHealingItemAt(Coords position)
+    {
+        for (int i = 0; i < healingItems.Count; i++)
+        {
+            if (healingItems[i].Position.Equals(position))
+            {
+                healingItems.RemoveAt(i);
+                return true;
+            }
+        }
+        return false;
     }
 
     public CellTypes GetCellAt(Coords Coords)
@@ -91,9 +156,11 @@ public class Level
     {
         Origin = origin;
         Console.CursorTop = origin.Y;
+
         for (int y = 0; y < levelData.Length; y++)
         {
-            Console.CursorLeft = origin.X;
+            Console.CursorLeft = origin.X; 
+
             for (int x = 0; x < levelData[y].Length; x++)
             {
                 var cellValue = GetCellAt(x, y);
@@ -103,10 +170,15 @@ public class Level
                 Console.Write(cellVisual);
                 Console.ResetColor();
             }
-            Console.WriteLine();
-        }
-    }
 
+            Console.WriteLine(); 
+        }
+        foreach (var healingItemPosition in HealingItemPositions)
+    {
+        Console.SetCursorPosition(origin.X + healingItemPosition.X, origin.Y + healingItemPosition.Y);
+        Console.Write(cellVisuals[CellTypes.HealingItem]);
+    }
+    }
 
     internal bool IsCoordsCorrect(Coords Coords)
     {

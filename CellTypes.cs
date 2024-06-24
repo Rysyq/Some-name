@@ -9,6 +9,9 @@ public enum CellTypes
     Grass = 0,
     Cross = 4,
     Empty = 5,
+
+    //
+    HealingItem = 8,
 }
 
 //stąd: https://pl.piliapp.com/symbol/square/
