@@ -1,13 +1,13 @@
 # Poszczególne wymagania:
-# -Logiczne rozdzielenie kodu na klasy i metody 
-# -Poruszanie się postaci po ekranie przez input z klawiatury 
-# -Ograniczenie poruszania się np. przez nieprzenikalne ściany 
-# -Poruszający się NPC Interakcja z NPC - wrodzy/przyjaźni 
-# -Interakcja z przedmiotami, leżącymi na planszy - podnoszenie ich 
+# -Logiczne rozdzielenie kodu na klasy i metody ^^^
+# -Poruszanie się postaci po ekranie przez input z klawiatury ^^^
+# -Ograniczenie poruszania się np. przez nieprzenikalne ściany ^^^
+# -Poruszający się NPC Interakcja z NPC - wrodzy/przyjaźni ^^^
+# -Interakcja z przedmiotami, leżącymi na planszy - podnoszenie ich ^^^
 # -Inwentarz - dodawanie, przechowywanie i zużywanie przedmiotów 
-# -Losowe rozmieszczenie przedmiotów i NPC 
+# -Losowe rozmieszczenie przedmiotów i NPC ^^^
 # -Przechodzenie na inną planszę po wejściu na jakiś znak na mapie (schody, drabina czy drzwi na krańcach aktualnej planszy) 
-# -Walka/zadanie wymagające minigry, np. ciepło-zimno, kamień-papier-nożyce itp. 
+# -Walka/zadanie wymagające minigry, np. ciepło-zimno, kamień-papier-nożyce itp. ^^^
 # -Coś dodatkowego ambitnego spoza tej listy (np. proceduralnie generowane poziomy)
 
 # Idea:
@@ -15,11 +15,5 @@
 
 # Zawieszone w powietrzu (czyli do zrobiebia, ale można sie wstrzymać +pomyśleć i baczeć na wymagania):
 # -Odgórnie ograniczony inwentarz (ilość miejsc w ekwipunku)
-# -Dmg postaci - przyjrzeć się temu jeszcze raz po ogarnięciu itemów od dmg
-# -Plansza/Lokacja nr. 1
 # -Itemy podnoszące dmg
-# -Flaszki hp
-# -Przeciwnicy
 # -Looting system
-# +Pilnowanie balansu
-# Jeśli coś z powyższych jest potrzebne z jakiegokolwiek powodu to przenieść to do "to do".
