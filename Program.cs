@@ -26,7 +26,7 @@ level.GenerateRandomHealingItems(8, 20);
 level.InitializeAllHealingItems();
 
 // Console.WriteLine("After initializing healing items:");
-// Console.WriteLine($"Healing Item Positions count: {level.HealingItemPositions}");
+// Console.WriteLine($"{level.HealingItemPositions}");
 // Console.ReadKey();
 
 if (level.Size.X + levelOrigin.X >= 0 && level.Size.X + levelOrigin.X < Console.BufferWidth
@@ -76,12 +76,15 @@ if (level.Size.X + levelOrigin.X >= 0 && level.Size.X + levelOrigin.X < Console.
                 return false;
             }
 
+            // to sprawdza 
+
             if (CheckTwoCoords(nextPlayerPosition, level.HealingItemPositions))
             {
-                composedPlayer.Health.Heal(100);
-                //level.RemoveHealingItemAt(composedPlayer.PositionComp.Position); 
 
-                // level.RedrawCellAt(composedPlayer.PositionComp.Position);
+                composedPlayer.Health.Heal(100);
+                level.RemoveHealingItemAt(composedPlayer.PositionComp.Position);
+
+                level.RedrawCellAt(composedPlayer.PositionComp.Position);
 
                 Console.SetCursorPosition(2, 1);
                 Console.WriteLine($"Player healed! Current health: {composedPlayer.Health.Hp}");
