@@ -1,4 +1,5 @@
-public class Level
+
+public class Level : ILevel
 {
     public Coords Origin { get; set; }
     public Coords Size { get; }
@@ -136,18 +137,22 @@ public class Level
         }
     }
 
-    public bool RemoveHealingItemAt(Coords position)
+    public void RemoveHealingItemAt(Coords position)
+{
+    for (int i = 0; i < healingItems.Count; i++)
     {
-        for (int i = 0; i < healingItems.Count; i++)
+        if (healingItems[i].Position.Equals(position))
         {
-            if (healingItems[i].Position.Equals(position))
-            {
-                healingItems.RemoveAt(i);
-                return true;
-            }
+            healingItems.RemoveAt(i);
+            levelData[position.Y][position.X] = (int)CellTypes.Empty;
+            HealingItemPositions.Remove(position);
+            return; // No return value needed, as the method signature is void
         }
-        return false;
     }
+    // Optionally, you could throw an exception or handle the case where the item is not found
+    // This depends on your application logic and requirements.
+}
+
 
     public CellTypes GetCellAt(Coords Coords)
     {
@@ -192,7 +197,7 @@ public class Level
         }
     }
 
-    internal bool IsCoordsCorrect(Coords Coords)
+    public bool IsCoordsCorrect(Coords Coords)
     {
         if (Coords.Y >= 0 && Coords.Y < levelData.Length)
         {
@@ -214,7 +219,7 @@ public class Level
         Console.Write(visual);
     }
 
-    internal void DrawSomethingAt(string visual, Coords position)
+    public void DrawSomethingAt(string visual, Coords position)
     {
         Console.SetCursorPosition(position.X + Origin.X, position.Y + Origin.Y);
         Console.Write(visual);
@@ -225,7 +230,7 @@ public class Level
         return colorLevel.GetValueOrDefault(value, ConsoleColor.Black);
     }
 
-    internal void RedrawCellAt(Coords position)
+    public void RedrawCellAt(Coords position)
     {
         var cellValue = GetCellAt(position);
         var cellVisual = GetCellVisualAt(position);

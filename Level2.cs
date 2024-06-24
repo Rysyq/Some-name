@@ -1,9 +1,9 @@
-public class Level2
+public class Level2 : ILevel
 {
-    public Coords Origin { get; set; }
-    public Coords Size { get; }
+    public Coords Origin2 { get; set; }
+    public Coords Size2 { get; }
 
-    private int[][] levelData;
+    private int[][] levelData2;
 
     /// 
 
@@ -22,7 +22,7 @@ public class Level2
     public List<Coords> HealingItemPositions { get; private set; } = new List<Coords>();
 
     //stąd: https://pl.piliapp.com/symbol/square/
-    private Dictionary<CellTypes, ConsoleColor> colorLevel = new Dictionary<CellTypes, ConsoleColor> {
+    private Dictionary<CellTypes, ConsoleColor> colorLevel2 = new Dictionary<CellTypes, ConsoleColor> {
         { CellTypes.WallVerticalBold, ConsoleColor.Yellow},
         { CellTypes.WallHorizontalBold, ConsoleColor.Yellow},
         { CellTypes.WallCorner, ConsoleColor.Yellow},
@@ -40,11 +40,11 @@ public class Level2
         CellTypes.HealingItem
     };
 
-
+    public Coords Size { get; private set; }
 
     public Level2()
     {
-        levelData = new int[][] {
+        levelData2 = new int[][] {
             new []{1,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,1,},
             new []{14,6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,},
             new []{14,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,14,},
@@ -70,10 +70,10 @@ public class Level2
             new []{1,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,15,1,},
         };
 
-        int y = levelData.Length;
+        int y = levelData2.Length;
         int x = 0;
 
-        foreach (int[] row in levelData)
+        foreach (int[] row in levelData2)
         {
             if (row.Length > x)
             {
@@ -81,8 +81,8 @@ public class Level2
             }
         }
 
-        Size = new Coords(x, y);
-        Origin = new Coords(0, 0);
+        Size2 = new Coords(x, y);
+        Origin2 = new Coords(0, 0);
 
 
 
@@ -100,24 +100,24 @@ public class Level2
             Coords randomPosition;
             do
             {
-                int x = random.Next(0, Size.X);
-                int y = random.Next(0, Size.Y);
+                int x = random.Next(0, Size2.X);
+                int y = random.Next(0, Size2.Y);
                 randomPosition = new Coords(x, y);
             } while (!IsCoordsCorrect(randomPosition) || healingItems.Any(item => item.Position.Equals(randomPosition)));
 
             HealingItem newItem = new HealingItem(randomPosition, healingAmount);
             healingItems.Add(newItem);
-            levelData[randomPosition.Y][randomPosition.X] = (int)CellTypes.HealingItem;
+            levelData2[randomPosition.Y][randomPosition.X] = (int)CellTypes.HealingItem;
         }
     }
 
     public void InitializeHealingItems(Coords coords)
     {
-        for (int y = 0; y < levelData.Length; y++)
+        for (int y = 0; y < levelData2.Length; y++)
         {
             if (y == coords.Y)
             {
-                for (int x = 0; x < levelData[y].Length; x++)
+                for (int x = 0; x < levelData2[y].Length; x++)
                 {
                     if (x == coords.X)
                     {
@@ -136,17 +136,17 @@ public class Level2
         }
     }
 
-    public bool RemoveHealingItemAt(Coords position)
+    public void RemoveHealingItemAt(Coords position)
     {
         for (int i = 0; i < healingItems.Count; i++)
         {
             if (healingItems[i].Position.Equals(position))
             {
                 healingItems.RemoveAt(i);
-                return true;
+                levelData2[position.Y][position.X] = (int)CellTypes.Empty; // Optional: Update level data if necessary
+                return;
             }
         }
-        return false;
     }
 
     public CellTypes GetCellAt(Coords Coords)
@@ -156,7 +156,7 @@ public class Level2
 
     private CellTypes GetCellAt(int x, int y)
     {
-        return (CellTypes)levelData[y][x];
+        return (CellTypes)levelData2[y][x];
     }
 
     public char GetCellVisualAt(Coords Coords)
@@ -166,14 +166,14 @@ public class Level2
 
     public void Display(Coords origin)
     {
-        Origin = origin;
+        Origin2 = origin;
         Console.CursorTop = origin.Y;
 
-        for (int y = 0; y < levelData.Length; y++)
+        for (int y = 0; y < levelData2.Length; y++)
         {
             Console.CursorLeft = origin.X;
 
-            for (int x = 0; x < levelData[y].Length; x++)
+            for (int x = 0; x < levelData2[y].Length; x++)
             {
                 var cellValue = GetCellAt(x, y);
                 var cellVisual = cellVisuals[cellValue];
@@ -192,11 +192,11 @@ public class Level2
         }
     }
 
-    internal bool IsCoordsCorrect(Coords Coords)
+    public bool IsCoordsCorrect(Coords Coords)
     {
-        if (Coords.Y >= 0 && Coords.Y < levelData.Length)
+        if (Coords.Y >= 0 && Coords.Y < levelData2.Length)
         {
-            if (Coords.X >= 0 && Coords.X < levelData[Coords.Y].Length)
+            if (Coords.X >= 0 && Coords.X < levelData2[Coords.Y].Length)
             {
                 if (walkableCellTypes.Contains(GetCellAt(Coords)))
                 {
@@ -208,24 +208,24 @@ public class Level2
         return false;
     }
 
-    internal void DrawSomethingAt(char visual, Coords position)
+    public void DrawSomethingAt(char visual, Coords position)
     {
-        Console.SetCursorPosition(position.X + Origin.X, position.Y + Origin.Y);
+        Console.SetCursorPosition(position.X + Origin2.X, position.Y + Origin2.Y);
         Console.Write(visual);
     }
 
-    internal void DrawSomethingAt(string visual, Coords position)
+    public void DrawSomethingAt(string visual, Coords position)
     {
-        Console.SetCursorPosition(position.X + Origin.X, position.Y + Origin.Y);
+        Console.SetCursorPosition(position.X + Origin2.X, position.Y + Origin2.Y);
         Console.Write(visual);
     }
 
     private ConsoleColor GetCellColorByValue(CellTypes value)
     {
-        return colorLevel.GetValueOrDefault(value, ConsoleColor.Black);
+        return colorLevel2.GetValueOrDefault(value, ConsoleColor.Black);
     }
 
-    internal void RedrawCellAt(Coords position)
+    public void RedrawCellAt(Coords position)
     {
         var cellValue = GetCellAt(position);
         var cellVisual = GetCellVisualAt(position);
