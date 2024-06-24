@@ -81,46 +81,55 @@ public class Level
         Size = new Coords(x, y);
         Origin = new Coords(0, 0);
 
-        
 
-        InitializeHealingItems();
 
     }
 
 
     private List<HealingItem> healingItems = new List<HealingItem>();
 
-     public void GenerateRandomHealingItems(int numberOfItems, int healingAmount)
-{
-    Random random = new Random();
-
-    for (int i = 0; i < numberOfItems; i++)
+    public void GenerateRandomHealingItems(int numberOfItems, int healingAmount)
     {
-        Coords randomPosition;
-        do
+        Random random = new Random();
+
+        for (int i = 0; i < numberOfItems; i++)
         {
-            int x = random.Next(0, Size.X);
-            int y = random.Next(0, Size.Y);
-            randomPosition = new Coords(x, y);
-        } while (!IsCoordsCorrect(randomPosition) || healingItems.Any(item => item.Position.Equals(randomPosition)));
+            Coords randomPosition;
+            do
+            {
+                int x = random.Next(0, Size.X);
+                int y = random.Next(0, Size.Y);
+                randomPosition = new Coords(x, y);
+            } while (!IsCoordsCorrect(randomPosition) || healingItems.Any(item => item.Position.Equals(randomPosition)));
 
-        HealingItem newItem = new HealingItem(randomPosition, healingAmount);
-        healingItems.Add(newItem);
-        levelData[randomPosition.Y][randomPosition.X] = (int)CellTypes.HealingItem;
+            HealingItem newItem = new HealingItem(randomPosition, healingAmount);
+            healingItems.Add(newItem);
+            levelData[randomPosition.Y][randomPosition.X] = (int)CellTypes.HealingItem;
+        }
     }
-}
 
-    public void InitializeHealingItems()
+    public void InitializeHealingItems(Coords coords)
     {
         for (int y = 0; y < levelData.Length; y++)
         {
-            for (int x = 0; x < levelData[y].Length; x++)
+            if (y == coords.Y)
             {
-                if (levelData[y][x] == 8) 
+                for (int x = 0; x < levelData[y].Length; x++)
                 {
-                    HealingItemPositions.Add(new Coords(x, y));
+                    if (x == coords.X)
+                    {
+                        HealingItemPositions.Add(coords);
+                    }
                 }
             }
+        }
+    }
+
+    public void InitializeAllHealingItems()
+    {
+        foreach (var item in healingItems)
+        {
+            InitializeHealingItems(item.Position);
         }
     }
 
@@ -159,7 +168,7 @@ public class Level
 
         for (int y = 0; y < levelData.Length; y++)
         {
-            Console.CursorLeft = origin.X; 
+            Console.CursorLeft = origin.X;
 
             for (int x = 0; x < levelData[y].Length; x++)
             {
@@ -171,13 +180,13 @@ public class Level
                 Console.ResetColor();
             }
 
-            Console.WriteLine(); 
+            Console.WriteLine();
         }
         foreach (var healingItemPosition in HealingItemPositions)
-    {
-        Console.SetCursorPosition(origin.X + healingItemPosition.X, origin.Y + healingItemPosition.Y);
-        Console.Write(cellVisuals[CellTypes.HealingItem]);
-    }
+        {
+            Console.SetCursorPosition(origin.X + healingItemPosition.X, origin.Y + healingItemPosition.Y);
+            Console.Write(cellVisuals[CellTypes.HealingItem]);
+        }
     }
 
     internal bool IsCoordsCorrect(Coords Coords)

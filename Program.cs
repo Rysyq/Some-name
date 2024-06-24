@@ -23,8 +23,7 @@ Level level = new Level();
 Coords levelOrigin = new Coords(15, 3);
 Console.Clear();
 level.GenerateRandomHealingItems(8, 20);
-level.InitializeHealingItems();
-
+level.InitializeAllHealingItems();
 
 // Console.WriteLine("After initializing healing items:");
 // Console.WriteLine($"Healing Item Positions count: {level.HealingItemPositions}");
@@ -33,16 +32,16 @@ level.InitializeHealingItems();
 if (level.Size.X + levelOrigin.X >= 0 && level.Size.X + levelOrigin.X < Console.BufferWidth
     && level.Size.Y + levelOrigin.Y >= 0 && level.Size.Y + levelOrigin.Y < Console.BufferHeight)
 {
-    
+
     level.Display(levelOrigin);
 
-    
+
 
     level.DrawSomethingAt(composedPlayer.VisualComp.Visual, composedPlayer.PositionComp.Position);
     level.DrawSomethingAt(composedEnemy.VisualComp.Visual, composedEnemy.PositionComp.Position);
     level.DrawSomethingAt(composedEnemy1.VisualComp.Visual, composedEnemy1.PositionComp.Position);
 
-    
+
 
     bool isPlayerAlive = true;
 
@@ -59,14 +58,30 @@ if (level.Size.X + levelOrigin.X >= 0 && level.Size.X + levelOrigin.X < Console.
 
 
             //healing thing
-
-
-            if (level.HealingItemPositions.Contains(composedPlayer.PositionComp.Position))
+            bool CheckTwoCoords(Coords coords1, List<Coords> lista)
             {
-                composedPlayer.Health.Heal(100); 
+
+                foreach (Coords coords in lista)
+                {
+
+                    if (coords1 != null && coords != null)
+                    {
+                        if (coords1.X == coords.X && coords1.Y == coords.Y)
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                return false;
+            }
+
+            if (CheckTwoCoords(nextPlayerPosition, level.HealingItemPositions))
+            {
+                composedPlayer.Health.Heal(100);
                 //level.RemoveHealingItemAt(composedPlayer.PositionComp.Position); 
 
-               // level.RedrawCellAt(composedPlayer.PositionComp.Position);
+                // level.RedrawCellAt(composedPlayer.PositionComp.Position);
 
                 Console.SetCursorPosition(2, 1);
                 Console.WriteLine($"Player healed! Current health: {composedPlayer.Health.Hp}");
