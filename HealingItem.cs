@@ -12,6 +12,7 @@ public class HealingItem
         IsPickedUp = false;
     }
 
+    
     // public void Healing(HealthComp healthComp)
     // {
     //     if (!IsPickedUp)
