@@ -4,6 +4,10 @@ public enum CellTypes
     WallCorner = 1,
     WallHorizontal = 2,
     WallVertical = 3,
+//another type of wall
+    WallVerticalBold = 14,
+    WallHorizontalBold = 15,
+
 
     //without coll
     Grass = 0,
