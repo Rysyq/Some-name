@@ -11,10 +11,6 @@ internal class HealthComp
 
     public void Heal(int amount)
     {
-        Console.SetCursorPosition(2, 1);
-
-        Console.WriteLine("You have used a potion!                                                                             ");
-
         hp += amount;
         if (hp > MaxHp)
         {

@@ -15,6 +15,7 @@ public class Level
         { CellTypes.Grass, '.'},
         { CellTypes.Empty, ' '},
         { CellTypes.Cross, '†'},
+        {CellTypes.Portal, '▓'},
         {CellTypes.HealingItem, '+'},
     };
 
@@ -28,12 +29,14 @@ public class Level
         { CellTypes.Grass, ConsoleColor.Green},
         { CellTypes.Empty, ConsoleColor.Black},
         { CellTypes.Cross, ConsoleColor.White},
+        { CellTypes.Portal, ConsoleColor.Red},
     };
 
     private CellTypes[] walkableCellTypes = new CellTypes[] {
         CellTypes.Grass,
         CellTypes.Cross,
         CellTypes.Empty,
+        CellTypes.Portal,
         CellTypes.HealingItem
     };
 
@@ -63,7 +66,7 @@ public class Level
             new []{3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,},
             new []{3,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,0,0,0,4,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,},
             new []{3,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,},
-            new []{3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,},
+            new []{3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6,3,},
             new []{1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,1,},
         };
 

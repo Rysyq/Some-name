@@ -14,6 +14,8 @@ public enum CellTypes
     Cross = 4,
     Empty = 5,
 
+    Portal = 6,
+
     //
     HealingItem = 8,
 }
