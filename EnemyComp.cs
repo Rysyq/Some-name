@@ -1,4 +1,5 @@
-class ComposedPlayer
+
+class ComposedEnemy
 {
     public VisualComp VisualComp { get; }
     public HealthComp Health { get; }
@@ -7,14 +8,19 @@ class ComposedPlayer
     public IInputComp InputComp { get; }
     public DamageComp DamageComp { get; }
 
+    public RandomPositionComp RandomPosition { get; }
 
-    public ComposedPlayer(string visual, Coords startingPosition)
+    public ComposedEnemy(string visual, RandomPositionComp randomPositionComp)
     {
+
+        Coords randomPosition = randomPositionComp.GenerateRandomPosition();
+
         VisualComp = new VisualComp(visual);
         Health = new HealthComp();
-        PositionComp = new PositionComp(startingPosition);
-        InputComp = new KeyboardInputComp();
+        PositionComp = new PositionComp(randomPosition);
+        InputComp = new RandomInputComp();
         Movement = new MoveComp(PositionComp, InputComp);
         DamageComp = new DamageComp(PositionComp);
     }
 }
+
