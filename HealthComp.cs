@@ -1,8 +1,8 @@
 
 internal class HealthComp
-{   
-    public int Hp 
-    { 
+{
+    public int Hp
+    {
         get => hp;
         set => hp = Math.Clamp(value, 0, MaxHp);
     }
@@ -11,8 +11,9 @@ internal class HealthComp
 
     public void Heal(int amount)
     {
-        
-        Console.WriteLine("You have used a potion!");
+        Console.SetCursorPosition(2, 1);
+
+        Console.WriteLine("You have used a potion!                                                                             ");
 
         hp += amount;
         if (hp > MaxHp)
@@ -32,10 +33,10 @@ internal class HealthComp
     }
 
     public class HealingItem
-{
-    public void Healing(HealthComp healthComp)
     {
-        healthComp.Heal(30); 
+        public void Healing(HealthComp healthComp)
+        {
+            healthComp.Heal(30);
+        }
     }
-}
 }
