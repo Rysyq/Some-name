@@ -1,18 +1,27 @@
 public class RandomPositionComp
 {
     Random rps;
-    private int maxX;
-    private int maxY;
+    private int X;
+    private int Y;
 
-    public RandomPositionComp(int maxX, int maxY)
+    public Coords RandomPosition { get; set; }
+
+    public RandomPositionComp(Coords startingRandomPosition)
+    {
+        RandomPosition = new Coords(startingRandomPosition);
+    }
+
+    public RandomPositionComp(int X, int Y)
     {
         rps = new Random();
-        this.maxX = maxX;
-        this.maxY = maxY;
+        this.X = X;
+        this.Y = Y;
     }
 
     public Coords GenerateRandomPosition()
     {
-        return new Coords(rps.Next(maxX), rps.Next(maxY));
+        int randomX = rps.Next(X);
+        int randomY = rps.Next(Y);
+        return new Coords(randomX, randomY);
     }
 }
