@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace GameNamespace
 {
     class Program
     {
         static bool isPlayerAlive = true;
+        static bool isBossSpawned = false;
 
         static void Main(string[] args)
         {
@@ -20,10 +20,9 @@ namespace GameNamespace
             Coords randomPosition = randomPositionComp.GenerateRandomPosition();
             Coords randomPosition1 = randomPositionComp.GenerateRandomPosition();
 
+            // Create enemies for level 1 (level)
             ComposedEnemy composedEnemy = new ComposedEnemy("D", randomPositionComp);
             ComposedEnemy composedEnemy1 = new ComposedEnemy("v", randomPositionComp);
-
-            ComposedEnemy bossLichKing = new ComposedEnemy("L", randomPositionComp);
 
             Coords playerPosition = new Coords(10, 3);
             ComposedPlayer composedPlayer = new ComposedPlayer("S", playerPosition);
@@ -47,13 +46,18 @@ namespace GameNamespace
                     level.DrawSomethingAt(composedPlayer.VisualComp.Visual, composedPlayer.PositionComp.Position);
 
                     HandleHealing(level, nextPlayerPosition, composedPlayer);
-                    HandleEnemyMovement(level, composedEnemy, composedEnemy1, bossLichKing);
-                    HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1, bossLichKing);
+                    HandleEnemyMovement(level, composedEnemy, composedEnemy1);
+                    HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1);
 
                     if (composedPlayer.PositionComp.Position.X == 57 && composedPlayer.PositionComp.Position.Y == 21)
                     {
                         ClearLevel(level, levelOrigin);
                         Console.Clear();
+
+                        // Create new enemies for level 2 (level2)
+                        composedEnemy = new ComposedEnemy("D", randomPositionComp);
+                        composedEnemy1 = new ComposedEnemy("v", randomPositionComp);
+
                         DisplayLevel(level2, levelOrigin2);
 
                         composedPlayer.PositionComp.Position = new Coords(1, 1);
@@ -69,35 +73,61 @@ namespace GameNamespace
                                 level2.DrawSomethingAt(composedPlayer.VisualComp.Visual, composedPlayer.PositionComp.Position);
 
                                 HandleHealing(level2, nextPlayerPosition, composedPlayer);
-                                HandleEnemyMovement(level2, composedEnemy, composedEnemy1, bossLichKing);
-                                HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1, bossLichKing);
+                                HandleEnemyMovement(level2, composedEnemy, composedEnemy1);
+                                HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1);
+
                                 if (composedPlayer.PositionComp.Position.X == 1 && composedPlayer.PositionComp.Position.Y == 1)
                                 {
                                     Console.SetCursorPosition(2, 1);
                                     Console.WriteLine(new string(' ', Console.WindowWidth));
                                     Console.SetCursorPosition(2, 1);
                                     Console.WriteLine("How dare you!");
-                                    nextPlayerPosition = composedPlayer.Movement.GetNextPosition();
-                                    while (isPlayerAlive && composedEnemy.Health.Hp + composedEnemy1.Health.Hp + bossLichKing.Health.Hp != 0)
-                                    {
-                                        composedPlayer.Movement.Move(nextPlayerPosition);
-                                        level2.RedrawCellAt(composedPlayer.Movement.PreviousPosition);
-                                        level2.DrawSomethingAt(composedPlayer.VisualComp.Visual, composedPlayer.PositionComp.Position);
 
-                                        HandleHealing(level2, nextPlayerPosition, composedPlayer);
-                                        HandleEnemyMovement(level2, composedEnemy, composedEnemy1, bossLichKing);
-                                        HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1, bossLichKing);
+                                    // Spawn boss only if not already spawned
+                                    if (!isBossSpawned)
+                                    {
+                                        ComposedEnemy bossLichKing = new ComposedEnemy("L", randomPositionComp);
+                                        isBossSpawned = true;
+
+                                        while (isPlayerAlive && (composedEnemy.Health.Hp > 0 || composedEnemy1.Health.Hp > 0 || bossLichKing.Health.Hp > 0))
+                                        {
+                                            nextPlayerPosition = composedPlayer.Movement.GetNextPosition();
+                                            if (level2.IsCoordsCorrect(nextPlayerPosition))
+                                            {
+                                                composedPlayer.Movement.Move(nextPlayerPosition);
+                                                level2.RedrawCellAt(composedPlayer.Movement.PreviousPosition);
+                                                level2.DrawSomethingAt(composedPlayer.VisualComp.Visual, composedPlayer.PositionComp.Position);
+
+                                                HandleHealing(level2, nextPlayerPosition, composedPlayer);
+                                                HandleEnemyMovement(level2, composedEnemy, composedEnemy1, bossLichKing);
+                                                HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1, bossLichKing);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        while (isPlayerAlive)
+                                        {
+                                            nextPlayerPosition = composedPlayer.Movement.GetNextPosition();
+                                            if (level2.IsCoordsCorrect(nextPlayerPosition))
+                                            {
+                                                composedPlayer.Movement.Move(nextPlayerPosition);
+                                                level2.RedrawCellAt(composedPlayer.Movement.PreviousPosition);
+                                                level2.DrawSomethingAt(composedPlayer.VisualComp.Visual, composedPlayer.PositionComp.Position);
+
+                                                HandleHealing(level2, nextPlayerPosition, composedPlayer);
+                                                HandleEnemyMovement(level2, composedEnemy, composedEnemy1);
+                                                HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1);
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
-
                     }
-
                 }
             }
         }
-
 
         static void ClearLevel(ILevel level, Coords levelOrigin)
         {
@@ -120,21 +150,31 @@ namespace GameNamespace
 
         static void HandleHealing(ILevel level, Coords nextPlayerPosition, ComposedPlayer composedPlayer)
         {
-            if (CheckTwoCoords(nextPlayerPosition, level.HealingItemPositions))
+            // Find the healing item position in the list
+            for (int i = 0; i < level.HealingItemPositions.Count; i++)
             {
-                composedPlayer.Health.Heal(25);
-                level.RemoveHealingItemAt(composedPlayer.PositionComp.Position);
-                level.RedrawCellAt(composedPlayer.PositionComp.Position);
+                Coords healingItemPosition = level.HealingItemPositions[i];
 
-                Console.SetCursorPosition(2, 1);
-                Console.SetCursorPosition(2, 1);
-                Console.WriteLine(new string(' ', Console.WindowWidth));
-                Console.SetCursorPosition(2, 1);
-                Console.WriteLine($"Player healed! Current health: {composedPlayer.Health.Hp}");
-                Console.ReadKey();
-                Console.SetCursorPosition(2, 1);
-                Console.WriteLine(new string(' ', Console.WindowWidth));
-                Console.SetCursorPosition(2, 1);
+                if (nextPlayerPosition != null && healingItemPosition != null &&
+                    nextPlayerPosition.X == healingItemPosition.X && nextPlayerPosition.Y == healingItemPosition.Y)
+                {
+                    composedPlayer.Health.Heal(25);
+
+                    level.HealingItemPositions.RemoveAt(i);
+
+                    level.RedrawCellAt(healingItemPosition);
+
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine($"Player healed! Current health: {composedPlayer.Health.Hp}");
+                    Console.ReadKey(true);
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(2, 1);
+
+                    break;
+                }
             }
         }
 
@@ -150,7 +190,7 @@ namespace GameNamespace
             return false;
         }
 
-        static void HandleEnemyMovement(ILevel level, ComposedEnemy composedEnemy, ComposedEnemy composedEnemy1, ComposedEnemy bossLichKing)
+        static void HandleEnemyMovement(ILevel level, ComposedEnemy composedEnemy, ComposedEnemy composedEnemy1, ComposedEnemy bossLichKing = null)
         {
             if (composedEnemy.Health.Hp > 0)
             {
@@ -174,127 +214,82 @@ namespace GameNamespace
                 }
             }
 
-            if (bossLichKing.Health.Hp > 0)
+            if (bossLichKing != null && bossLichKing.Health.Hp > 0)
             {
-                Coords nextbossPosition = bossLichKing.Movement.GetNextPosition();
-                if (level.IsCoordsCorrect(nextbossPosition))
+                Coords nextBossPosition = bossLichKing.Movement.GetNextPosition();
+                if (level.IsCoordsCorrect(nextBossPosition))
                 {
-                    bossLichKing.Movement.Move(nextbossPosition);
+                    bossLichKing.Movement.Move(nextBossPosition);
                     level.RedrawCellAt(bossLichKing.Movement.PreviousPosition);
                     level.DrawSomethingAt(bossLichKing.VisualComp.Visual, bossLichKing.PositionComp.Position);
                 }
             }
+
         }
 
-        static void HandlePlayerEnemyInteractions(ComposedPlayer composedPlayer, ComposedEnemy composedEnemy, ComposedEnemy composedEnemy1, ComposedEnemy bossLichKing)
+        static void HandlePlayerEnemyInteractions(ComposedPlayer composedPlayer, ComposedEnemy composedEnemy, ComposedEnemy composedEnemy1, ComposedEnemy bossLichKing = null)
         {
-            if (composedEnemy.Health.Hp > 0 && composedEnemy1.Health.Hp > 0 && bossLichKing.Health.Hp > 0)
+            if (composedPlayer.Health.Hp <= 0)
             {
-                if (composedPlayer.Health.Hp <= 0)
+                Console.SetCursorPosition(2, 1);
+                Console.WriteLine(new string(' ', Console.WindowWidth));
+                Console.SetCursorPosition(2, 1);
+                Console.WriteLine("The player is dead.");
+                isPlayerAlive = false;
+                Console.SetCursorPosition(2, 1);
+                Console.ReadKey(true);
+                return;
+            }
+
+            //attack
+
+            if (composedEnemy.Health.Hp > 0)
+            {
+                if (composedEnemy.DamageComp.CanEnemyHitInThisRange(composedPlayer.PositionComp.Position))
                 {
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine("The player is dead.");
-                    isPlayerAlive = false;
-                    Console.SetCursorPosition(2, 1);
-                    Console.ReadKey();
-                }
-                if (composedEnemy.DamageComp.CanEnemyHitInThisRange(composedPlayer.PositionComp.Position)
-                    || composedEnemy1.DamageComp.CanEnemyHitInThisRange(composedPlayer.PositionComp.Position)
-                    || bossLichKing.DamageComp.CanEnemyHitInThisRange(composedPlayer.PositionComp.Position))
-                {
-                    Console.SetCursorPosition(2, 1);
                     composedEnemy.DamageComp.Attack(composedPlayer.Health);
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}");
+                }
+            }
+
+            if (composedEnemy1.Health.Hp > 0)
+            {
+                if (composedEnemy1.DamageComp.CanEnemyHitInThisRange(composedPlayer.PositionComp.Position))
+                {
                     composedEnemy1.DamageComp.Attack(composedPlayer.Health);
-                    bossLichKing.DamageComp.Attack(composedPlayer.Health);
                     Console.SetCursorPosition(2, 1);
                     Console.WriteLine(new string(' ', Console.WindowWidth));
                     Console.SetCursorPosition(2, 1);
-                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}     ");
+                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}");
+                }
+            }
+
+            
+
+            // player attack
+
+            if (composedPlayer.Health.Hp > 0)
+            {
+                if (composedPlayer.DamageComp.CanHitInThisRange(composedEnemy.PositionComp.Position))
+                {
+                    composedPlayer.DamageComp.Attack(composedEnemy.Health);
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine(new string(' ', Console.WindowWidth));
+                    Console.SetCursorPosition(2, 1);
+                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}");
                 }
 
-                if (composedPlayer.DamageComp.CanHitInThisRange(composedEnemy.PositionComp.Position)
-                    && composedPlayer.DamageComp.CanHitInThisRange(composedEnemy1.PositionComp.Position))
+                if (composedPlayer.DamageComp.CanHitInThisRange(composedEnemy1.PositionComp.Position))
                 {
-                    Console.SetCursorPosition(2, 1);
-                    Console.ReadKey(true);
-                    composedPlayer.DamageComp.Attack(composedEnemy.Health);
                     composedPlayer.DamageComp.Attack(composedEnemy1.Health);
                     Console.SetCursorPosition(2, 1);
                     Console.WriteLine(new string(' ', Console.WindowWidth));
                     Console.SetCursorPosition(2, 1);
-                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}     ");
+                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}");
                 }
-                else if (composedPlayer.DamageComp.CanHitInThisRange(composedEnemy.PositionComp.Position))
-                {
-                    Console.SetCursorPosition(2, 1);
-                    Console.ReadKey(true);
-                    composedPlayer.DamageComp.Attack(composedEnemy.Health);
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}     ");
-                }
-                else if (composedPlayer.DamageComp.CanHitInThisRange(composedEnemy1.PositionComp.Position))
-                {
-                    Console.SetCursorPosition(2, 1);
-                    Console.ReadKey(true);
-                    composedPlayer.DamageComp.Attack(composedEnemy1.Health);
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}     ");
-                }
-                else if (composedPlayer.DamageComp.CanHitInThisRange(composedEnemy.PositionComp.Position)
-                    && composedPlayer.DamageComp.CanHitInThisRange(composedEnemy1.PositionComp.Position)
-                    && composedPlayer.DamageComp.CanHitInThisRange(bossLichKing.PositionComp.Position))
-                {
-                    Console.SetCursorPosition(2, 1);
-                    Console.ReadKey(true);
-                    composedPlayer.DamageComp.Attack(composedEnemy.Health);
-                    composedPlayer.DamageComp.Attack(composedEnemy1.Health);
-                    composedPlayer.DamageComp.Attack(bossLichKing.Health);
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}, The Lich King: {bossLichKing.Health.Hp}     ");
-                }
-                else if (composedPlayer.DamageComp.CanHitInThisRange(composedEnemy.PositionComp.Position)
-                    && composedPlayer.DamageComp.CanHitInThisRange(bossLichKing.PositionComp.Position))
-                {
-                    Console.SetCursorPosition(2, 1);
-                    Console.ReadKey(true);
-                    composedPlayer.DamageComp.Attack(composedEnemy.Health);
-                    composedPlayer.DamageComp.Attack(bossLichKing.Health);
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}, The Lich King: {bossLichKing.Health.Hp}     ");
-                }
-                else if (composedPlayer.DamageComp.CanHitInThisRange(composedEnemy1.PositionComp.Position)
-                    && composedPlayer.DamageComp.CanHitInThisRange(bossLichKing.PositionComp.Position))
-                {
-                    Console.SetCursorPosition(2, 1);
-                    Console.ReadKey(true);
-                    composedPlayer.DamageComp.Attack(composedEnemy1.Health);
-                    composedPlayer.DamageComp.Attack(bossLichKing.Health);
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}, The Lich King: {bossLichKing.Health.Hp}     ");
-                }
-                else if (composedPlayer.DamageComp.CanHitInThisRange(bossLichKing.PositionComp.Position))
-                {
-                    Console.SetCursorPosition(2, 1);
-                    Console.ReadKey(true);
-                    composedPlayer.DamageComp.Attack(bossLichKing.Health);
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine(new string(' ', Console.WindowWidth));
-                    Console.SetCursorPosition(2, 1);
-                    Console.WriteLine($"Player: {composedPlayer.Health.Hp}, Enemy: {composedEnemy.Health.Hp}, Enemy 2: {composedEnemy1.Health.Hp}, The Lich King: {bossLichKing.Health.Hp}     ");
-                }
-
             }
         }
     }
