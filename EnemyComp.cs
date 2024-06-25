@@ -22,5 +22,8 @@ class ComposedEnemy
         Movement = new MoveComp(PositionComp, InputComp);
         DamageComp = new DamageComp(PositionComp);
     }
+
+    
+
 }
 
