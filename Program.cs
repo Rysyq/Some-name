@@ -112,6 +112,14 @@ namespace GameNamespace
                                                 HandleEnemyMovement(level2, composedEnemy, composedEnemy1, bossLichKing);
                                                 HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1, bossLichKing);
                                             }
+                                            /// we need to test if it work >>>>
+
+                                            if (bossLichKing.Health.Hp == 0)
+                                            {
+                                                Console.WriteLine("You have killed the Lich King!");
+                                                Console.ReadKey();
+                                                return;
+                                            }
                                         }
                                     }
                                     else

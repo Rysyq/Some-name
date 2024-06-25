@@ -23,7 +23,16 @@ class ComposedEnemy
         DamageComp = new DamageComp(PositionComp);
     }
 
-    
+//this do not reallly wokr for now >>>>
+    public void SetHealth(int health)
+    {
+        Health.Hp = health;
+    }
+
+    public void SetDamage(int newDamage)
+    {
+        DamageComp.Dmg = newDamage;
+    }
 
 }
 
