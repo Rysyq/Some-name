@@ -33,11 +33,12 @@ namespace GameNamespace
             Coords levelOrigin = new Coords(15, 3);
             Coords levelOrigin2 = new Coords(15, 3);
 
-            DisplayLevel(level, levelOrigin);
+            DisplayLevel(level, levelOrigin, composedPlayer);
 
             while (isPlayerAlive)
             {
-                Coords nextPlayerPosition = composedPlayer.Movement.GetNextPosition();
+                ConsoleKey pressedKeyboardKey = composedPlayer.InputComp.GetKeyboardKey();
+                Coords nextPlayerPosition = composedPlayer.Movement.GetNextPosition(pressedKeyboardKey);
                 if (level.IsCoordsCorrect(nextPlayerPosition))
                 {
                     composedPlayer.Movement.Move(nextPlayerPosition);
@@ -49,6 +50,8 @@ namespace GameNamespace
                     HandleEnemyMovement(level, composedEnemy, composedEnemy1);
                     HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1);
 
+                    HandleItemUsage(composedPlayer, pressedKeyboardKey); // uzywanie przedmiotow
+
                     if (composedPlayer.PositionComp.Position.X == 57 && composedPlayer.PositionComp.Position.Y == 21)
                     {
                         ClearLevel(level, levelOrigin);
@@ -58,13 +61,14 @@ namespace GameNamespace
                         composedEnemy = new ComposedEnemy("D", randomPositionComp);
                         composedEnemy1 = new ComposedEnemy("v", randomPositionComp);
 
-                        DisplayLevel(level2, levelOrigin2);
+                        DisplayLevel(level2, levelOrigin2, composedPlayer);
 
                         composedPlayer.PositionComp.Position = new Coords(1, 1);
 
                         while (isPlayerAlive)
                         {
-                            nextPlayerPosition = composedPlayer.Movement.GetNextPosition();
+                            pressedKeyboardKey = composedPlayer.InputComp.GetKeyboardKey();
+                            nextPlayerPosition = composedPlayer.Movement.GetNextPosition(pressedKeyboardKey);
 
                             if (level2.IsCoordsCorrect(nextPlayerPosition))
                             {
@@ -75,6 +79,8 @@ namespace GameNamespace
                                 HandleHealing(level2, nextPlayerPosition, composedPlayer);
                                 HandleEnemyMovement(level2, composedEnemy, composedEnemy1);
                                 HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1);
+
+                                HandleItemUsage(composedPlayer, pressedKeyboardKey); // uzywanie przedmiotow
 
                                 if (composedPlayer.PositionComp.Position.X == 1 && composedPlayer.PositionComp.Position.Y == 1)
                                 {
@@ -101,7 +107,8 @@ namespace GameNamespace
 
                                         while (isPlayerAlive && (composedEnemy.Health.Hp > 0 || composedEnemy1.Health.Hp > 0 || bossLichKing.Health.Hp > 0))
                                         {
-                                            nextPlayerPosition = composedPlayer.Movement.GetNextPosition();
+                                            pressedKeyboardKey = composedPlayer.InputComp.GetKeyboardKey();
+                                            nextPlayerPosition = composedPlayer.Movement.GetNextPosition(pressedKeyboardKey);
                                             if (level2.IsCoordsCorrect(nextPlayerPosition))
                                             {
                                                 composedPlayer.Movement.Move(nextPlayerPosition);
@@ -111,14 +118,16 @@ namespace GameNamespace
                                                 HandleHealing(level2, nextPlayerPosition, composedPlayer);
                                                 HandleEnemyMovement(level2, composedEnemy, composedEnemy1, bossLichKing);
                                                 HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1, bossLichKing);
-                                            }
-                                            /// we need to test if it work >>>>
 
-                                            if (bossLichKing.Health.Hp == 0)
-                                            {
-                                                Console.WriteLine("You have killed the Lich King!");
-                                                Console.ReadKey();
-                                                return;
+                                                HandleItemUsage(composedPlayer, pressedKeyboardKey); // Obsługa używania przedmiotów z ekwipunku
+
+                                                if (bossLichKing.Health.Hp == 0)
+                                                {
+                                                    Console.SetCursorPosition(2, 1);
+                                                    Console.WriteLine("You have killed the Lich King!");
+                                                    Console.ReadKey();
+                                                    return;
+                                                }
                                             }
                                         }
                                     }
@@ -126,7 +135,8 @@ namespace GameNamespace
                                     {
                                         while (isPlayerAlive)
                                         {
-                                            nextPlayerPosition = composedPlayer.Movement.GetNextPosition();
+                                            pressedKeyboardKey = composedPlayer.InputComp.GetKeyboardKey();
+                                            nextPlayerPosition = composedPlayer.Movement.GetNextPosition(pressedKeyboardKey);
                                             if (level2.IsCoordsCorrect(nextPlayerPosition))
                                             {
                                                 composedPlayer.Movement.Move(nextPlayerPosition);
@@ -136,6 +146,8 @@ namespace GameNamespace
                                                 HandleHealing(level2, nextPlayerPosition, composedPlayer);
                                                 HandleEnemyMovement(level2, composedEnemy, composedEnemy1);
                                                 HandlePlayerEnemyInteractions(composedPlayer, composedEnemy, composedEnemy1);
+
+                                                HandleItemUsage(composedPlayer, pressedKeyboardKey); // Obsługa używania przedmiotów z ekwipunku
                                             }
                                         }
                                     }
@@ -159,11 +171,14 @@ namespace GameNamespace
             }
         }
 
-        static void DisplayLevel(ILevel level, Coords levelOrigin)
+        static void DisplayLevel(ILevel level, Coords levelOrigin, ComposedPlayer composedPlayer)
         {
             level.GenerateRandomHealingItems(8, 20);
             level.InitializeAllHealingItems();
             level.Display(levelOrigin);
+
+            // Aktualizacja pozycji gracza na ekranie
+            level.DrawSomethingAt(composedPlayer.VisualComp.Visual, composedPlayer.PositionComp.Position);
         }
 
         static void HandleHealing(ILevel level, Coords nextPlayerPosition, ComposedPlayer composedPlayer)
@@ -175,16 +190,16 @@ namespace GameNamespace
                 if (nextPlayerPosition != null && healingItemPosition != null &&
                     nextPlayerPosition.X == healingItemPosition.X && nextPlayerPosition.Y == healingItemPosition.Y)
                 {
-                    composedPlayer.Health.Heal(25);
+                    var healingItem = new HealingItem(25);
+                    composedPlayer.Inventory.AddItem(healingItem);
 
                     level.HealingItemPositions.RemoveAt(i);
-
                     level.RedrawCellAt(healingItemPosition);
 
                     Console.SetCursorPosition(2, 1);
                     Console.WriteLine(new string(' ', Console.WindowWidth));
                     Console.SetCursorPosition(2, 1);
-                    Console.WriteLine($"Player healed! Current health: {composedPlayer.Health.Hp}");
+                    Console.WriteLine($"Healing item picked up!");
                     Console.ReadKey(true);
                     Console.SetCursorPosition(2, 1);
                     Console.WriteLine(new string(' ', Console.WindowWidth));
@@ -193,18 +208,6 @@ namespace GameNamespace
                     break;
                 }
             }
-        }
-
-        static bool CheckTwoCoords(Coords coords1, List<Coords> lista)
-        {
-            foreach (Coords coords in lista)
-            {
-                if (coords1 != null && coords != null && coords1.X == coords.X && coords1.Y == coords.Y)
-                {
-                    return true;
-                }
-            }
-            return false;
         }
 
         static void HandleEnemyMovement(ILevel level, ComposedEnemy composedEnemy, ComposedEnemy composedEnemy1, ComposedEnemy bossLichKing = null)
@@ -241,7 +244,6 @@ namespace GameNamespace
                     level.DrawSomethingAt(bossLichKing.VisualComp.Visual, bossLichKing.PositionComp.Position);
                 }
             }
-
         }
 
         static void HandlePlayerEnemyInteractions(ComposedPlayer composedPlayer, ComposedEnemy composedEnemy, ComposedEnemy composedEnemy1, ComposedEnemy bossLichKing = null)
@@ -328,6 +330,20 @@ namespace GameNamespace
                         Console.SetCursorPosition(2, 1);
                         Console.WriteLine($"Player attacks Lich King! Lich King HP: {bossLichKing.Health.Hp}");
                     }
+                }
+            }
+        }
+
+        static void HandleItemUsage(ComposedPlayer composedPlayer, ConsoleKey key)
+        {
+            if (key == ConsoleKey.I)
+            {
+                composedPlayer.Inventory.ShowInventory();
+                Console.SetCursorPosition(2, 1);
+                Console.WriteLine("Choose item to use (number):");
+                if (int.TryParse(Console.ReadLine(), out int itemIndex))
+                {
+                    composedPlayer.Inventory.UseItemFromInventory(itemIndex, composedPlayer);
                 }
             }
         }

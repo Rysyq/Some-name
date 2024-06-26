@@ -1,15 +1,14 @@
-internal class DamageComp
+public class DamageComp
 {
     public int Dmg
     {
-        get => basicdmg;
-        set => basicdmg = Math.Clamp(value, 5, 100);
+        get => basicDmg;
+        set => basicDmg = Math.Clamp(value, 5, MaxDmg);
     }
-    int basicdmg = 10;
-    int MaxDmg { get; set; } = 100;
-    int range = 2;
-
-    int enemyrange = 1;
+    private int basicDmg = 10;
+    public int MaxDmg { get; set; } = 100;
+    private int range = 2;
+    private int enemyRange = 1;
     private readonly PositionComp positionComp;
 
     public DamageComp(PositionComp positionComp)
@@ -30,11 +29,11 @@ internal class DamageComp
         int distanceX = Math.Abs(positionComp.Position.X - targetPosition.X);
         int distanceY = Math.Abs(positionComp.Position.Y - targetPosition.Y);
 
-        return (distanceX <= enemyrange && distanceY == 0) || (distanceX == 0 && distanceY <= enemyrange);
+        return (distanceX <= enemyRange && distanceY == 0) || (distanceX == 0 && distanceY <= enemyRange);
     }
 
     public void Attack(HealthComp targetHealthComp)
     {
-        targetHealthComp.GettingDamage(basicdmg);
+        targetHealthComp.GettingDamage(basicDmg);
     }
 }

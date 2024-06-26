@@ -1,4 +1,4 @@
-class ComposedPlayer
+public class ComposedPlayer
 {
     public VisualComp VisualComp { get; }
     public HealthComp Health { get; }
@@ -6,7 +6,7 @@ class ComposedPlayer
     public MoveComp Movement { get; }
     public IInputComp InputComp { get; }
     public DamageComp DamageComp { get; }
-
+    public Inventory Inventory { get; }
 
     public ComposedPlayer(string visual, Coords startingPosition)
     {
@@ -16,5 +16,12 @@ class ComposedPlayer
         InputComp = new KeyboardInputComp();
         Movement = new MoveComp(PositionComp, InputComp);
         DamageComp = new DamageComp(PositionComp);
+        Inventory = new Inventory();
+    }
+
+    public void Heal(int amount)
+    {
+        Health.Heal(amount);
+        Console.WriteLine($"Player healed by {amount}. Current health: {Health.Hp}");
     }
 }

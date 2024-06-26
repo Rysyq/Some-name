@@ -13,4 +13,15 @@ public class RandomInputComp : IInputComp
             default: return new Coords(0, 0);
         }
     }
+    public Coords GetDirection(ConsoleKey key)
+    {
+        Coords nextPosition = new Coords(0, 0);
+
+        return nextPosition;
+    }
+
+    public ConsoleKey GetKeyboardKey()
+    {
+        return Console.ReadKey(true).Key;
+    }
 }

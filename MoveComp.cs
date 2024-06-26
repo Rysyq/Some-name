@@ -1,4 +1,4 @@
-internal class MoveComp
+public class MoveComp
 {
     private readonly PositionComp positionComp;
     private readonly IInputComp inputComp;
@@ -21,6 +21,15 @@ internal class MoveComp
         positionComp.Position.Y = targetPosition.Y;
     }
 
+    public Coords GetNextPosition(ConsoleKey key)
+    {
+        Coords nextPosition = new Coords(positionComp.Position);
+        Coords direction = inputComp.GetDirection(key);
+        nextPosition.X += direction.X;
+        nextPosition.Y += direction.Y;
+
+        return nextPosition;
+    }
     public Coords GetNextPosition()
     {
         Coords nextPosition = new Coords(positionComp.Position);
