@@ -30,7 +30,7 @@ namespace GameNamespace
             ILevel level = new Level();
             ILevel level2 = new Level2();
 
-            Coords levelOrigin = new Coords(15, 3);
+            Coords levelOrigin = new Coords(20, 3);
             Coords levelOrigin2 = new Coords(15, 3);
 
             DisplayLevel(level, levelOrigin, composedPlayer);

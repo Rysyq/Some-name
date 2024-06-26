@@ -32,6 +32,7 @@ public class Inventory
 
     public void ShowInventory()
     {
+        Console.SetCursorPosition(3, 2);
         Console.WriteLine("Inventory:");
         for (int i = 0; i < items.Count; i++)
         {
@@ -76,7 +77,7 @@ public class Inventory
         if (keyInfo.Key == ConsoleKey.I)
         {
             composedPlayer.Inventory.ShowInventory();
-            Console.SetCursorPosition(2, 1);
+            Console.SetCursorPosition(1, 1);
             Console.WriteLine("Choose item to use (number):");
             if (int.TryParse(Console.ReadLine(), out int itemIndex))
             {
