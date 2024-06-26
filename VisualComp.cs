@@ -1,4 +1,4 @@
-internal class VisualComp
+public class VisualComp
 {
     public string Visual { get; set;} = "S";
 
