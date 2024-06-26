@@ -15,7 +15,7 @@ public class HealingItem : Item
     public HealingItem(int healingAmount)
         : base("Healing Item")
     {
-        Position = new Coords(0,0);
+        Position = new Coords(0, 0);
         HealingAmount = healingAmount;
         IsPickedUp = false;
     }
@@ -26,7 +26,19 @@ public class HealingItem : Item
         {
             player.Health.Heal(HealingAmount);
             IsPickedUp = true;
+
+            int currentCursorTop = Console.CursorTop;
+            int currentCursorLeft = Console.CursorLeft;
+
             Console.WriteLine($"{Name} used. {HealingAmount} health restored.");
+
+            Console.ReadKey(true);
+
+            ConsoleHelper.ClearCurrentConsoleLine(currentCursorTop);
+
+            Console.SetCursorPosition(currentCursorLeft, currentCursorTop);
+
+            ConsoleHelper.ClearCurrentConsoleLine(currentCursorTop - 1);
         }
     }
 }

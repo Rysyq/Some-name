@@ -40,7 +40,7 @@ public class Inventory
         }
     }
 
-    // HandleHealing do Inventory
+    // 
     public void HandleHealing(ILevel level, Coords nextPlayerPosition, ComposedPlayer composedPlayer)
     {
         for (int i = 0; i < level.HealingItemPositions.Count; i++)
@@ -70,7 +70,7 @@ public class Inventory
         }
     }
 
-    // Method to handle item usage from player input
+    
     public void HandleItemUsage(ComposedPlayer composedPlayer)
     {
         ConsoleKeyInfo keyInfo = Console.ReadKey(true);

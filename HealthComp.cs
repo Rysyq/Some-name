@@ -23,8 +23,17 @@ public class HealthComp
         {
             hp = MaxHp;
         }
+
+        int currentCursorTop = Console.CursorTop;
+
         Console.SetCursorPosition(2, 1);
         Console.WriteLine($"Health increased by {amount}. Current health: {hp}");
+
+        Console.ReadKey(true);
+
+        ConsoleHelper.ClearCurrentConsoleLine(1);
+
+        Console.SetCursorPosition(0, currentCursorTop);
     }
 
     public void GettingDamage(int amount)
@@ -34,8 +43,17 @@ public class HealthComp
         {
             hp = 0;
         }
+
+        int currentCursorTop = Console.CursorTop;
+
         Console.SetCursorPosition(2, 1);
         Console.WriteLine($"Health decreased by {amount}. Current health: {hp}");
+
+        Console.ReadKey(true);
+
+        ConsoleHelper.ClearCurrentConsoleLine(1);
+
+        Console.SetCursorPosition(0, currentCursorTop);
     }
 
     public class HealingItem
